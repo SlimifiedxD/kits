@@ -1,0 +1,103 @@
+map-reset-floor: gray_concrete
+# The amount of ticks that it should take for a dynamite to explode.
+dynamite-explode-ticks: 15
+# In minutes
+map-reset-cooldown: 20
+
+kit-settings:
+  weapons:
+    items:
+      - material: diamond_sword
+        enchantments:
+          sharpness: [1, 2, 3]
+
+      - material: netherite_sword
+        enchantments:
+          sharpness: [1, 2, 3]
+
+      - material: trident
+        enchantments:
+          loyalty: [1]
+
+  helmets:
+    items:
+      - material: diamond_helmet
+        enchantments:
+          protection: [1, 2]
+
+      - material: netherite_helmet
+        enchantments:
+          protection: [1, 2]
+
+  chestplates:
+    items:
+      - material: diamond_chestplate
+        enchantments:
+          protection: [1, 2]
+
+      - material: netherite_chestplate
+        enchantments:
+          protection: [1, 2]
+
+  leggings:
+    items:
+      - material: diamond_leggings
+        enchantments:
+          protection: [1, 2]
+
+      - material: netherite_leggings
+        enchantments:
+          protection: [1, 2]
+
+  boots:
+    items:
+      - material: diamond_boots
+        enchantments:
+          protection: [1, 2]
+
+      - material: netherite_boots
+        enchantments:
+          protection: [1, 2]
+
+  tools:
+    max-items: 2
+    items:
+      - material: diamond_pickaxe
+        enchantments:
+          efficiency: [1, 2]
+
+      - material: diamond_axe
+        enchantments:
+          sharpness: [1]
+          efficiency: [1]
+
+  ranged-Weapons:
+    items:
+      - material: bow
+        items:
+          - material: arrow
+            amount: 16
+        enchantments:
+          power: [1, 2]
+
+      - material: crossbow
+        enchantments:
+          quick_charge: [1, 2, 3]
+
+  food:
+    items:
+      - material: cooked_beef
+        amount: [4, 8, 16]
+
+  offhand:
+    items:
+      - material: shield
+      - material: totem_of_undying
+
+  misc:
+    min-items: 0
+    items:
+      - material: red_candle
+        name: "<red>Dynamite"
+        pdc: "dynamite"
+        amount: [1, 2]
