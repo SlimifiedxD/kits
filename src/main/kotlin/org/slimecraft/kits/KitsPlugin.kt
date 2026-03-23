@@ -12,11 +12,18 @@ import com.sksamuel.hoplite.watch.ReloadableConfig
 import com.sksamuel.hoplite.watch.watchers.FileWatcher
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
+import net.kyori.adventure.text.Component
+import net.milkbowl.vault.economy.Economy
 import org.bukkit.Material
 import org.bukkit.entity.EntityType
+import org.bukkit.entity.Player
 import org.bukkit.entity.TNTPrimed
 import org.bukkit.event.block.Action
+import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.block.BlockDropItemEvent
+import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.ExplosionPrimeEvent
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerRespawnEvent
@@ -25,6 +32,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.slimecraft.bedrock.annotation.plugin.Dependency
 import org.slimecraft.bedrock.annotation.plugin.Plugin
 import org.slimecraft.bedrock.event.EventNode
+import org.slimecraft.bedrock.kt.extensions.component
 import org.slimecraft.bedrock.util.Ticks
 import org.slimecraft.funmands.paper.PaperFunmandsManager
 import org.slimecraft.kits.command.KitsCommand
@@ -33,13 +41,16 @@ import org.slimecraft.kits.command.ToggleKitsCommand
 import org.slimecraft.kits.KitManager
 import org.slimecraft.kits.data.MapReset
 import org.slimecraft.kits.data.config.Config
+import org.slimecraft.kits.data.config.deserializer.ComponentDecoder
 
 @Plugin("kits", dependencies = [
-    Dependency("FastAsyncWorldEdit", required = true)
+    Dependency("FastAsyncWorldEdit", required = true),
+    Dependency("Vault", required = true)
 ])
 class KitsPlugin : JavaPlugin() {
     lateinit var kitMgr: KitManager
     lateinit var reloader: ReloadableConfig<Config>
+    lateinit var economy: Economy
 
     override fun onEnable() {
         saveDefaultConfig()
@@ -57,22 +68,23 @@ class KitsPlugin : JavaPlugin() {
         val loader = ConfigLoaderBuilder.empty()
             .withClassLoader(KitsPlugin::class.java.classLoader)
             .addDefaults()
+            .addDecoder(ComponentDecoder())
             .addSource(PropertySource.file(dataPath.resolve("config.yml").toFile()))
             .build()
         println(dataPath.toString())
         val watcher = FileWatcher(dataPath.toString())
         reloader = ReloadableConfig(loader, Config::class).addWatcher(watcher)
 
-        refreshMapResetTask(mapResetDao, Material.valueOf(reloader.getLatest().mapResetFloor.uppercase()), reloader.getLatest().mapResetCooldown)
+        refreshMapResetTask(mapResetDao, reloader.getLatest())
         kitMgr = KitManager(reloader.getLatest().kitSettings)
+        val dynamiteKey = key("dynamite")
+        economy = server.servicesManager.getRegistration(Economy::class.java)!!.provider
 
         EventNode.global().addListener(PlayerPostRespawnEvent::class.java) {
             val p = it.player
             if (!shouldGiveKits(p)) return@addListener
             kitMgr.give(it.player)
         }
-
-        val dynamiteKey = key("dynamite")
 
         EventNode.global().addListener(PlayerInteractEvent::class.java) {
             val item = it.item
@@ -93,6 +105,23 @@ class KitsPlugin : JavaPlugin() {
             if (!it.entity.persistentDataContainer.has(dynamiteKey)) return@addListener
             it.fire = true
             it.radius = 5f
+        }
+
+        EventNode.global().addListener(BlockBreakEvent::class.java) {
+            if (it.block.type != Material.valueOf(reloader.getLatest().coinBlock.uppercase())) return@addListener // get block type from config
+            it.isDropItems = false
+            val p = it.player
+            val amt = reloader.getLatest().coinsPerCoinBlockMined
+            economy.depositPlayer(p, amt)
+            p.sendMessage(reloader.getLatest().coinsEarnedMessage.component("amount" to Component.text(amt)))
+        }
+
+        EventNode.global().addListener(PlayerDeathEvent::class.java) {
+            val p = it.damageSource.directEntity
+            if (p !is Player) return@addListener
+            val amt = reloader.getLatest().coinsPerPlayerKilled
+            economy.depositPlayer(p, amt)
+            p.sendMessage(reloader.getLatest().coinsEarnedMessage.component("amount" to Component.text(amt)))
         }
     }
 }

@@ -16,6 +16,7 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
+import org.slimecraft.bedrock.event.EventNode
 import org.slimecraft.bedrock.kt.extensions.component
 import org.slimecraft.bedrock.kt.extensions.minutes
 import org.slimecraft.bedrock.kt.extensions.seconds
@@ -24,6 +25,7 @@ import org.slimecraft.bedrock.task.Tasks
 import org.slimecraft.bedrock.util.Ticks
 import org.slimecraft.bedrock.util.location.LocationDto
 import org.slimecraft.kits.data.MapReset
+import org.slimecraft.kits.data.config.Config
 import java.util.UUID
 import kotlin.random.Random
 
@@ -71,7 +73,7 @@ fun shouldGiveKits(p: Player): Boolean {
     return p.uniqueId !in doNotGiveKitsTo
 }
 
-fun refreshMapResetTask(dao: Dao<MapReset, Int>, mapResetFloor: Material, mapResetCooldown: Minutes) {
+fun refreshMapResetTask(dao: Dao<MapReset, Int>, config: Config) {
     mapResetTask?.cancel()
     mapResetTask = Task
         .builder()
@@ -91,7 +93,7 @@ fun refreshMapResetTask(dao: Dao<MapReset, Int>, mapResetFloor: Material, mapRes
                     val blocks = region.map { bWorld.getBlockAt(it.x(), it.y(), it.z()) }.toList()
                     for (block in blocks) {
                         if (block.y == region.maximumY) {
-                            block.type = mapResetFloor // get block type from config l8r
+                            block.type = Material.valueOf(config.mapResetFloor.uppercase())
                         } else {
                             if (Random.nextInt(0, 10) == 0) { // get from config
                                 block.type = Material.GOLD_ORE // get from config l8r
@@ -104,6 +106,6 @@ fun refreshMapResetTask(dao: Dao<MapReset, Int>, mapResetFloor: Material, mapRes
             }
         }
         .async()
-        .repeat(mapResetCooldown.value.minutes)
+        .repeat(config.mapResetCooldown.value.minutes)
         .run()
 }

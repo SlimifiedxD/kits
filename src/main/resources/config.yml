@@ -3,6 +3,13 @@ map-reset-floor: gray_concrete
 dynamite-explode-ticks: 15
 # In minutes
 map-reset-cooldown: 20
+# The type of the coin block that will spawn in map resets
+coin-block: gold_ore
+# How many coins (as a decimal) a player should get when mining a block of the type of the coin block
+coins-per-coin-block-mined: 0.5
+# How many coins a player gets when killing another player
+coins-per-player-killed: 5
+coins-earned-message: "<#1a8739>You earned <#ebd728><amount> coins! <#1a8739>Spend them at the merchants at spawn!"
 
 kit-settings:
   weapons:

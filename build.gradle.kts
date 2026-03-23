@@ -29,6 +29,7 @@ dependencies {
     implementation(platform("com.intellectualsites.bom:bom-newest:1.56"))
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7")
 
     // Config library
     implementation("com.sksamuel.hoplite:hoplite-core:3.0.0.RC2")

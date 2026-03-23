@@ -60,7 +60,7 @@ class MapResetCommand(dao: Dao<MapReset, Int>, val plugin: KitsPlugin) : PaperCo
                 dao.create(MapReset(one!!, two!!))
                 Tasks.run { t ->
                     p.sendMessage("<green>Set the map reset region!".component())
-                    refreshMapResetTask(dao, Material.valueOf(plugin.reloader.getLatest().mapResetFloor.uppercase()), plugin.reloader.getLatest().mapResetCooldown)
+                    refreshMapResetTask(dao, plugin.reloader.getLatest())
                 }
             }, true)
         }, {
