@@ -19,12 +19,18 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
     implementation("com.github.SlimifiedxD:quartz:e51863f7d5")
     kapt("com.github.SlimifiedxD:quartz:e51863f7d5")
+
+    // Data persistence-related libraries
     implementation("com.j256.ormlite:ormlite-core:6.1")
     implementation("com.j256.ormlite:ormlite-jdbc:6.1")
     implementation("org.xerial:sqlite-jdbc:3.51.3.0")
+
+    // Plugin dependencies
     implementation(platform("com.intellectualsites.bom:bom-newest:1.56"))
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
+
+    // Config library
     implementation("com.sksamuel.hoplite:hoplite-core:3.0.0.RC2")
     implementation("com.sksamuel.hoplite:hoplite-yaml:3.0.0.RC2")
     implementation("com.sksamuel.hoplite:hoplite-watch:3.0.0.RC2")
