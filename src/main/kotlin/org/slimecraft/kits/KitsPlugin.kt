@@ -40,6 +40,7 @@ import org.slimecraft.kits.command.KitsCommand
 import org.slimecraft.kits.command.MapResetCommand
 import org.slimecraft.kits.command.ToggleKitsCommand
 import org.slimecraft.kits.KitManager
+import org.slimecraft.kits.command.WithdrawCommand
 import org.slimecraft.kits.data.MapReset
 import org.slimecraft.kits.data.config.Config
 import org.slimecraft.kits.data.config.deserializer.ComponentDecoder
@@ -80,6 +81,7 @@ class KitsPlugin : JavaPlugin() {
         kitMgr = KitManager(reloader.getLatest().kitSettings)
         val dynamiteKey = key("dynamite")
         economy = server.servicesManager.getRegistration(Economy::class.java)!!.provider
+        cmdManager.registerCommand(WithdrawCommand(economy, reloader))
 
         EventNode.global().addListener(PlayerPostRespawnEvent::class.java) {
             val p = it.player
@@ -129,6 +131,16 @@ class KitsPlugin : JavaPlugin() {
             val amt = reloader.getLatest().coinsPerPlayerKilled
             economy.depositPlayer(p, amt)
             p.sendMessage(reloader.getLatest().coinsEarnedMessage.component("amount" to Component.text(amt)))
+        }
+
+        EventNode.global().addListener(PlayerInteractEvent::class.java) {
+            val item = it.item
+            if (item?.persistentDataContainer?.has(withdrawalKey) != true) return@addListener
+            val amt = item.persistentDataContainer.get(withdrawalKey, PersistentDataType.DOUBLE)!!
+            val p = it.player
+            item.amount -= 1
+            economy.depositPlayer(p, amt)
+            p.sendMessage(reloader.getLatest().withdrawalUsed.component("amount" to Component.text(amt), "balance" to Component.text(economy.getBalance(p))))
         }
     }
 }

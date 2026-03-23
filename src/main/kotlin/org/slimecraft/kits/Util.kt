@@ -33,6 +33,7 @@ private val leftClickPositions: MutableMap<UUID, LocationDto> = mutableMapOf()
 private val rightClickPositions: MutableMap<UUID, LocationDto> = mutableMapOf()
 private var mapResetTask: Task? = null
 private val doNotGiveKitsTo: MutableSet<UUID> = mutableSetOf()
+val withdrawalKey = key("withdrawal")
 
 fun key(value: String): NamespacedKey {
     return NamespacedKey("kits", value)
