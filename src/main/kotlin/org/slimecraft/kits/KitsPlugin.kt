@@ -1,5 +1,6 @@
 package org.slimecraft.kits
 
+import com.destroystokyo.paper.event.block.AnvilDamagedEvent
 import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent
 import com.j256.ormlite.dao.Dao
 import com.j256.ormlite.dao.DaoManager
@@ -141,6 +142,10 @@ class KitsPlugin : JavaPlugin() {
             item.amount -= 1
             economy.depositPlayer(p, amt)
             p.sendMessage(reloader.getLatest().withdrawalUsed.component("amount" to Component.text(amt), "balance" to Component.text(economy.getBalance(p))))
+        }
+
+        EventNode.global().addListener(AnvilDamagedEvent::class.java) {
+            it.isCancelled = true
         }
     }
 }
