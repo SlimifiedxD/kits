@@ -30,7 +30,7 @@ import org.slimecraft.funmands.paper.PaperFunmandsManager
 import org.slimecraft.kits.command.KitsCommand
 import org.slimecraft.kits.command.MapResetCommand
 import org.slimecraft.kits.command.ToggleKitsCommand
-import org.slimecraft.kits.data.KitManager
+import org.slimecraft.kits.KitManager
 import org.slimecraft.kits.data.MapReset
 import org.slimecraft.kits.data.config.Config
 

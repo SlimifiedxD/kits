@@ -1,14 +1,12 @@
-package org.slimecraft.kits.data
+package org.slimecraft.kits
 
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
-import org.slimecraft.bedrock.util.item.ItemBuilder
 import org.slimecraft.kits.data.config.dto.ItemsDto
 import org.slimecraft.kits.data.config.dto.KitSettings
+import kotlin.collections.plusAssign
 import kotlin.random.Random
-import kotlin.random.nextInt
 
 class KitManager(val kitSettings: KitSettings) {
     fun give(p: Player) {
@@ -34,7 +32,7 @@ class KitManager(val kitSettings: KitSettings) {
     }
 
     private fun getRandomItems(dto: ItemsDto): List<ItemStack> {
-        val item = dto.items[Random.nextInt(0, dto.items.size)]
+        val item = dto.items[Random.Default.nextInt(0, dto.items.size)]
         val items = mutableListOf(item.itemStack())
         for (item in item.items) {
             items.add(item.itemStack())

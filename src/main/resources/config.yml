@@ -97,6 +97,13 @@ kit-settings:
       - material: shield
       - material: totem_of_undying
 
+  blocks:
+    items:
+      - material: cobblestone
+        amount: 64
+      - material: oak_planks
+        amount: 64
+
   misc:
     min-items: 0
     items:
