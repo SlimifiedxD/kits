@@ -21,6 +21,7 @@ import org.bukkit.entity.TNTPrimed
 import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockDropItemEvent
+import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.ExplosionPrimeEvent
 import org.bukkit.event.entity.PlayerDeathEvent
@@ -89,7 +90,8 @@ class KitsPlugin : JavaPlugin() {
         EventNode.global().addListener(PlayerInteractEvent::class.java) {
             val item = it.item
             if (item?.persistentDataContainer?.has(dynamiteKey) != true) return@addListener
-            if (it.action != Action.RIGHT_CLICK_AIR) return@addListener
+            val action = it.action
+            if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) return@addListener
             val p = it.player
             if (p.getCooldown(dynamiteKey) > 0) return@addListener
             val tnt = p.world.spawn(p.location, TNTPrimed::class.java)
@@ -99,6 +101,11 @@ class KitsPlugin : JavaPlugin() {
             item.amount -= 1
             p.setCooldown(dynamiteKey, Ticks.seconds(7).toInt())
             p.setCooldown(item, Ticks.seconds(7).toInt())
+        }
+
+        EventNode.global().addListener(BlockPlaceEvent::class.java) {
+            if (!it.itemInHand.persistentDataContainer.has(dynamiteKey)) return@addListener
+            it.isCancelled = true
         }
 
         EventNode.global().addListener(ExplosionPrimeEvent::class.java) {
