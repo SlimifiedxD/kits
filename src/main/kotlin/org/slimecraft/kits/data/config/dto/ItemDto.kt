@@ -11,7 +11,7 @@ import org.slimecraft.kits.key
 import kotlin.random.Random
 import kotlin.random.nextInt
 
-data class ItemDto(val material: String, val name: String = "", val amount: List<Int> = listOf(1), val pdc: String = "", val enchantments: Map<String, List<Int>> = emptyMap()) { // TODO: later make it a List<EnchantmentDto> and make it work with a custom deserializer
+data class ItemDto(val material: String, val name: String = "", val amount: List<Int> = listOf(1), val pdc: String = "", val enchantments: Map<String, List<Int>> = emptyMap(), val items: List<ItemDto> = listOf()) { // TODO: later make it a List<EnchantmentDto> and make it work with a custom deserializer
     fun itemStack(): ItemStack {
         val b = ItemBuilder.create()
             .material(Material.valueOf(material.uppercase()))

@@ -34,10 +34,11 @@ class KitManager(val kitSettings: KitSettings) {
     }
 
     private fun getRandomItems(dto: ItemsDto): List<ItemStack> {
-        val item = dto.items[Random.nextInt(0, dto.items.size)].itemStack()
-        val items = mutableListOf(item)
-        if (!item.type.name.lowercase().contains("bow")) return items
-        items.add(ItemBuilder.create().material(Material.ARROW).amount(6).build())
+        val item = dto.items[Random.nextInt(0, dto.items.size)]
+        val items = mutableListOf(item.itemStack())
+        for (item in item.items) {
+            items.add(item.itemStack())
+        }
         return items
     }
 }

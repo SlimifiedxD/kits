@@ -81,6 +81,9 @@ kit-settings:
           power: [1, 2]
 
       - material: crossbow
+        items:
+          - material: arrow
+            amount: 8
         enchantments:
           quick_charge: [1, 2, 3]
 
