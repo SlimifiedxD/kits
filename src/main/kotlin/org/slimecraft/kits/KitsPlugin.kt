@@ -56,7 +56,8 @@ import org.slimecraft.kits.data.config.deserializer.ComponentDecoder
 
 @Plugin("kits", dependencies = [
     Dependency("FastAsyncWorldEdit", required = true),
-    Dependency("Vault", required = true)
+    Dependency("Vault", required = true),
+    Dependency("WorldGuard", required = true)
 ])
 class KitsPlugin : JavaPlugin() {
     lateinit var kitMgr: KitManager
