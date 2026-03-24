@@ -17,8 +17,8 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
-    implementation("com.github.SlimifiedxD:quartz:893b16b992")
-    kapt("com.github.SlimifiedxD:quartz:893b16b992")
+    implementation("com.github.SlimifiedxD:quartz:e51863f7d5")
+    kapt("com.github.SlimifiedxD:quartz:e51863f7d5")
 
     // Data persistence-related libraries
     implementation("com.j256.ormlite:ormlite-core:6.1")
