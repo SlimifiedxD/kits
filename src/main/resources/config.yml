@@ -121,3 +121,14 @@ kit-settings:
         name: "<red>Dynamite"
         pdc: "dynamite"
         amount: [1, 2]
+      - material: splash_potion
+        potion_contents:
+          color: "#00ff7f"
+          effects:
+            - id: strength
+              amplifier: 2
+              # Duration in seconds
+              duration: 30
+              ambient: false
+              show_particles: false
+              show_icon: false

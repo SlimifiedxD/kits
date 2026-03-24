@@ -12,6 +12,7 @@ import com.sk89q.worldedit.regions.CuboidRegion
 import com.sksamuel.hoplite.decoder.Minutes
 import com.sksamuel.hoplite.decoder.duration
 import org.bukkit.Bukkit
+import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.block.Block
@@ -72,6 +73,14 @@ fun toggleGiveKits(p: Player) {
 
 fun shouldGiveKits(p: Player): Boolean {
     return p.uniqueId !in doNotGiveKitsTo
+}
+
+fun fromHex(hex: String): Color {
+    var hex = hex
+    if (hex.startsWith("#")) {
+        hex = hex.substring(1)
+    }
+    return Color.fromRGB(hex.toInt(16))
 }
 
 fun refreshMapResetTask(dao: Dao<MapReset, Int>, config: Config) {

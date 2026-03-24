@@ -2,6 +2,8 @@ package org.slimecraft.kits.data.config.dto
 
 import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.ItemEnchantments
+import io.papermc.paper.datacomponent.item.PotionContents
+import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
@@ -10,8 +12,9 @@ import org.slimecraft.bedrock.util.item.ItemBuilder
 import org.slimecraft.kits.key
 import kotlin.random.Random
 import kotlin.random.nextInt
+import org.slimecraft.kits.fromHex
 
-data class ItemDto(val material: String, val name: String = "", val amount: List<Int> = listOf(1), val pdc: String = "", val enchantments: Map<String, List<Int>> = emptyMap(), val items: List<ItemDto> = listOf()) { // TODO: later make it a List<EnchantmentDto> and make it work with a custom deserializer
+data class ItemDto(val material: String, val name: String = "", val amount: List<Int> = listOf(1), val pdc: String = "", val enchantments: Map<String, List<Int>> = emptyMap(), val items: List<ItemDto> = listOf(), val potionContents: PotionContentsDto? = null) { // TODO: later make it a List<EnchantmentDto> and make it work with a custom deserializer
     fun itemStack(): ItemStack {
         val b = ItemBuilder.create()
             .material(Material.valueOf(material.uppercase()))
@@ -24,6 +27,17 @@ data class ItemDto(val material: String, val name: String = "", val amount: List
 
         if (!pdc.isEmpty()) {
             b.pdc(key(pdc), PersistentDataType.BOOLEAN, true)
+        }
+
+        if (potionContents != null) {
+            val contents = PotionContents.potionContents()
+            if (potionContents.color != null) {
+                contents.customColor(fromHex(potionContents.color))
+            }
+            potionContents.effects.forEach {
+                contents.addCustomEffect(it.potionEffect())
+            }
+            b.component(DataComponentTypes.POTION_CONTENTS, contents)
         }
 
         return b.build()
