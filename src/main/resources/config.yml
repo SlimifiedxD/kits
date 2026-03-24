@@ -133,3 +133,8 @@ kit-settings:
               ambient: false
               show_particles: false
               show_icon: false
+      - material: light_blue_dye
+        offhand-effects:
+          - id: haste
+            amplifier: 1
+            duration: 1

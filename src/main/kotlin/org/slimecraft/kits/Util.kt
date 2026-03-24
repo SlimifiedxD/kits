@@ -107,8 +107,10 @@ fun refreshMapResetTask(dao: Dao<MapReset, Int>, config: Config) {
                         } else {
                             if (Random.nextInt(0, 10) == 0) { // get from config
                                 block.type = Material.GOLD_ORE // get from config l8r
+                            } else if (Random.nextInt(0, 20) == 0) {
+                                block.type = Material.GOLD_BLOCK // get from config l8r
                             } else {
-                                block.type = Material.STONE // get from config l8r
+                                block.type = Material.STONE
                             }
                         }
                     }
