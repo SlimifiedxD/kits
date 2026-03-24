@@ -5,6 +5,7 @@ dynamite-explode-ticks: 15
 map-reset-cooldown: 20
 # The type of the coin block that will spawn in map resets
 coin-block: gold_ore
+op-coin-block: gold_block
 # How many coins (as a decimal) a player should get when mining a block of the type of the coin block
 coins-per-coin-block-mined: 0.5
 coins-per-op-coin-block-mined: 3
