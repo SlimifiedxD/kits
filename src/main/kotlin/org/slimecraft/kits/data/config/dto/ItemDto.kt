@@ -67,6 +67,7 @@ data class ItemDto(
                         player.addPotionEffect(effect.potionEffect())
                     }
                 }
+                .run()
         }
 
         return b.build()
