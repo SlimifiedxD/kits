@@ -118,12 +118,19 @@ class KitsPlugin : JavaPlugin() {
         }
 
         EventNode.global().addListener(BlockBreakEvent::class.java) {
-            if (it.block.type != Material.valueOf(reloader.getLatest().coinBlock.uppercase())) return@addListener // get block type from config
-            it.isDropItems = false
-            val p = it.player
-            val amt = reloader.getLatest().coinsPerCoinBlockMined
-            economy.depositPlayer(p, amt)
-            p.sendMessage(reloader.getLatest().coinsEarnedMessage.component("amount" to Component.text(amt)))
+            if (it.block.type == Material.valueOf(reloader.getLatest().coinBlock.uppercase())) {
+                it.isDropItems = false
+                val p = it.player
+                val amt = reloader.getLatest().coinsPerCoinBlockMined
+                economy.depositPlayer(p, amt)
+                p.sendMessage(reloader.getLatest().coinsEarnedMessage.component("amount" to Component.text(amt)))
+            } else if (it.block.type == Material.valueOf(reloader.getLatest().opCoinBlock.uppercase())) {
+                it.isDropItems = false
+                val p = it.player
+                val amt = reloader.getLatest().coinsPerOpCoinBlockMined
+                economy.depositPlayer(p, amt)
+                p.sendMessage(reloader.getLatest().coinsEarnedMessage.component("amount" to Component.text(amt)))
+            }
         }
 
         EventNode.global().addListener(PlayerDeathEvent::class.java) {
