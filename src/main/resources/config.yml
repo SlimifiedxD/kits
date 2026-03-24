@@ -11,6 +11,7 @@ coins-per-coin-block-mined: 0.5
 coins-per-player-killed: 5
 coins-earned-message: "<#1a8739>You earned <#ebd728><amount> coins! <#1a8739>Spend them at the merchants at spawn!"
 not-enough-coins-for-withdrawal: "<red>You cannot withdraw <yellow><amount></yellow> coins because you only have <yellow><balance></yellow> available!"
+cannot-withdraw-invalid-amount: "<red>You cannot withdraw <yellow><amount></yellow> because it is less than or equal to zero!"
 withdrawal-success: "<green>You successfully withdrew <yellow><amount></yellow>! Your balance is now <yellow><balance></yellow>"
 withdrawal-used: "<green>You used the withdrawal and gained <yellow><amount></yellow>! Your balance is now <yellow><balance></yellow>"
 
