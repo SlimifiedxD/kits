@@ -63,7 +63,7 @@ data class ItemDto(
                 .whenRan {
                     for (player in Bukkit.getOnlinePlayers()) {
                         val offhand = player.inventory.itemInOffHand
-                        if (!offhand.persistentDataContainer.has(key)) return@whenRan
+                        if (!offhand.persistentDataContainer.has(key)) continue
                         player.addPotionEffect(effect.potionEffect())
                     }
                 }
