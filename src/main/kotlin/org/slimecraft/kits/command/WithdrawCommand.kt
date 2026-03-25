@@ -21,7 +21,7 @@ class WithdrawCommand(val economy: Economy, val reloadable: ReloadableConfig<Con
             val amt: Double = it.get("amount")
             val amtC = Component.text(amt)
             if (amt <= 0) {
-                p.sendMessage(reloadable.getLatest().cannotWithdrawNegativeAmount.component("amount" to amtC))
+                p.sendMessage(reloadable.getLatest().cannotWithdrawInvalidAmount.component("amount" to amtC))
             }
             if (!economy.has(p, amt)) {
                 p.sendMessage(reloadable.getLatest().notEnoughCoinsForWithdrawal.component("amount" to Component.text(amt), "balance" to Component.text(economy.getBalance(p))))
