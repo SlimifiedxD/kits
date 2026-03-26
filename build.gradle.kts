@@ -50,6 +50,13 @@ kapt {
 tasks {
     runServer {
         minecraftVersion("1.21.11")
+
+        downloadPlugins {
+            modrinth("fastasyncworldedit", "2.15.0")
+            github("MilkBowl", "Vault", "1.7.3", "Vault.jar")
+            modrinth("excellenteconomy", "2.7.0")
+            modrinth("nightcore", "2.14.0.1")
+        }
     }
 }
 
