@@ -6,6 +6,13 @@ import com.j256.ormlite.dao.Dao
 import com.j256.ormlite.dao.DaoManager
 import com.j256.ormlite.jdbc.JdbcConnectionSource
 import com.j256.ormlite.table.TableUtils
+import com.sk89q.worldedit.bukkit.BukkitAdapter
+import com.sk89q.worldguard.WorldGuard
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin
+import com.sk89q.worldguard.protection.flags.StateFlag
+import com.sk89q.worldguard.protection.flags.registry.FlagConflictException
+import com.sk89q.worldguard.protection.flags.registry.FlagRegistry
+import com.sk89q.worldguard.protection.regions.RegionContainer
 import com.sksamuel.hoplite.ConfigLoaderBuilder
 import com.sksamuel.hoplite.PropertySource
 import com.sksamuel.hoplite.addResourceSource
@@ -15,6 +22,7 @@ import io.papermc.paper.datacomponent.DataComponentTypes
 import io.papermc.paper.datacomponent.item.UseCooldown
 import net.kyori.adventure.text.Component
 import net.milkbowl.vault.economy.Economy
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
@@ -48,12 +56,25 @@ import org.slimecraft.kits.data.config.deserializer.ComponentDecoder
 
 @Plugin("kits", dependencies = [
     Dependency("FastAsyncWorldEdit", required = true),
-    Dependency("Vault", required = true)
+    Dependency("Vault", required = true),
+    Dependency("WorldGuard", required = true)
 ])
 class KitsPlugin : JavaPlugin() {
     lateinit var kitMgr: KitManager
     lateinit var reloader: ReloadableConfig<Config>
     lateinit var economy: Economy
+    lateinit var dynamiteFlag: StateFlag
+
+    override fun onLoad() {
+        val registry = WorldGuard.getInstance().flagRegistry
+        try {
+            val flag = StateFlag("dynamite", true)
+            registry.register(flag)
+            dynamiteFlag = flag
+        } catch (e: FlagConflictException) {
+            e.printStackTrace()
+        }
+    }
 
     override fun onEnable() {
         saveDefaultConfig()
@@ -90,12 +111,20 @@ class KitsPlugin : JavaPlugin() {
             kitMgr.give(it.player)
         }
 
+        val container = WorldGuard.getInstance().platform.regionContainer
+
         EventNode.global().addListener(PlayerInteractEvent::class.java) {
             val item = it.item
             if (item?.persistentDataContainer?.has(dynamiteKey) != true) return@addListener
             val action = it.action
             if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) return@addListener
             val p = it.player
+            val localPlayer = WorldGuardPlugin.inst().wrapPlayer(p)
+            val dynamiteFlagValue = container.createQuery().queryState(BukkitAdapter.adapt(p.location), localPlayer, dynamiteFlag)
+            if (dynamiteFlagValue == StateFlag.State.DENY) {
+                it.isCancelled = true
+                return@addListener
+            }
             if (p.getCooldown(dynamiteKey) > 0) return@addListener
             val tnt = p.world.spawn(p.location, TNTPrimed::class.java)
             tnt.velocity = p.location.direction.normalize().multiply(3)
@@ -118,12 +147,19 @@ class KitsPlugin : JavaPlugin() {
         }
 
         EventNode.global().addListener(BlockBreakEvent::class.java) {
-            if (it.block.type != Material.valueOf(reloader.getLatest().coinBlock.uppercase())) return@addListener // get block type from config
-            it.isDropItems = false
-            val p = it.player
-            val amt = reloader.getLatest().coinsPerCoinBlockMined
-            economy.depositPlayer(p, amt)
-            p.sendMessage(reloader.getLatest().coinsEarnedMessage.component("amount" to Component.text(amt)))
+            if (it.block.type == Material.valueOf(reloader.getLatest().coinBlock.uppercase())) {
+                it.isDropItems = false
+                val p = it.player
+                val amt = reloader.getLatest().coinsPerCoinBlockMined
+                economy.depositPlayer(p, amt)
+                p.sendMessage(reloader.getLatest().coinsEarnedMessage.component("amount" to Component.text(amt)))
+            } else if (it.block.type == Material.valueOf(reloader.getLatest().opCoinBlock.uppercase())) {
+                it.isDropItems = false
+                val p = it.player
+                val amt = reloader.getLatest().coinsPerOpCoinBlockMined
+                economy.depositPlayer(p, amt)
+                p.sendMessage(reloader.getLatest().coinsEarnedMessage.component("amount" to Component.text(amt)))
+            }
         }
 
         EventNode.global().addListener(PlayerDeathEvent::class.java) {

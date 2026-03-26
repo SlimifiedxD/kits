@@ -30,6 +30,7 @@ dependencies {
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.16")
 
     // Config library
     implementation("com.sksamuel.hoplite:hoplite-core:3.0.0.RC2")
