@@ -1,12 +1,15 @@
 package org.slimecraft.kits.data.config.dto
 
+import com.google.common.collect.ImmutableList
 import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.datacomponent.item.Fireworks
 import io.papermc.paper.datacomponent.item.ItemEnchantments
 import io.papermc.paper.datacomponent.item.PotionContents
 import io.papermc.paper.registry.RegistryAccess
 import io.papermc.paper.registry.RegistryKey
 import org.bukkit.Bukkit
 import org.bukkit.Color
+import org.bukkit.FireworkEffect
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
@@ -27,7 +30,8 @@ data class ItemDto(
     val enchantments: List<EnchantmentDto> = emptyList(),
     val items: List<ItemDto> = listOf(),
     val potionContents: PotionContentsDto? = null,
-    val offhandEffects: List<PotionEffectDto> = emptyList()
+    val offhandEffects: List<PotionEffectDto> = emptyList(),
+    val firework: FireworkDto? = null
 ) {
     fun itemStack(): ItemStack {
         val b = ItemBuilder.create()
@@ -35,7 +39,10 @@ data class ItemDto(
             .amount(amount[Random.nextInt(0, amount.size)])
             .component(
                 DataComponentTypes.ENCHANTMENTS,
-                ItemEnchantments.itemEnchantments(enchantments.associate { RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT).getOrThrow(NamespacedKey.minecraft(it.name)) to it.levels[Random.nextInt(0, it.levels.size)] })
+                ItemEnchantments.itemEnchantments(enchantments.associate {
+                    RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT)
+                        .getOrThrow(NamespacedKey.minecraft(it.name)) to it.levels[Random.nextInt(0, it.levels.size)]
+                })
             )
 
         if (!name.isEmpty()) {
@@ -57,6 +64,15 @@ data class ItemDto(
                 contents.addCustomEffect(it.potionEffect())
             }
             b.component(DataComponentTypes.POTION_CONTENTS, contents)
+        }
+
+        if (firework != null) {
+            b.component(DataComponentTypes.FIREWORKS, Fireworks.fireworks(firework.explosions.map {
+                FireworkEffect.builder().flicker(it.hasTwinkle).trail(it.hasTrail)
+                    .withColor(it.colors.map { fromHex(it) }).withFade(it.fadeColors.map { fromHex(it) }).with(
+                    FireworkEffect.Type.valueOf(it.shape.uppercase())
+                ).build()
+            }, firework.flightDuration))
         }
 
         for (effect in offhandEffects) {

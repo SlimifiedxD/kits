@@ -1,88 +1,122 @@
 map-reset-floor: gray_concrete
 # The amount of ticks that it should take for a dynamite to explode.
-dynamite-explode-ticks: 15
+dynamite-explode-ticks: 10
 # In minutes
-map-reset-cooldown: 20
-# The type of the coin block that will spawn in map resets
+map-reset-cooldown: 30
+
 coin-block: gold_ore
 op-coin-block: gold_block
-# How many coins (as a decimal) a player should get when mining a block of the type of the coin block
 coins-per-coin-block-mined: 0.5
 coins-per-op-coin-block-mined: 30
-# How many coins a player gets when killing another player
 coins-per-player-killed: 5
 coins-earned-message: "<#1a8739>You earned <#ebd728><amount> coins! <#1a8739>Spend them at the merchants at spawn!"
 not-enough-coins-for-withdrawal: "<red>You cannot withdraw <yellow><amount></yellow> coins because you only have <yellow><balance></yellow> available!"
-cannot-withdraw-invalid-amount: "<red>You cannot withdraw <yellow><amount></yellow> because it is less than or equal to zero!"
 withdrawal-success: "<green>You successfully withdrew <yellow><amount></yellow>! Your balance is now <yellow><balance></yellow>"
 withdrawal-used: "<green>You used the withdrawal and gained <yellow><amount></yellow>! Your balance is now <yellow><balance></yellow>"
+cannot-withdraw-invalid-amount: "<red>You cannot withdraw <yellow><amount></yellow> because it is less than or equal to zero!"
 
 kit-settings:
   weapons:
     items:
       - material: diamond_sword
         enchantments:
-          sharpness: [1, 2, 3]
+          - name: sharpness
+            levels: [1, 2, 3, 4]
 
       - material: netherite_sword
         enchantments:
-          sharpness: [1, 2, 3]
+          - name: sharpness
+            levels: [1, 2, 3]
 
       - material: trident
         enchantments:
-          loyalty: [1]
+          - name: loyalty
+            levels: [1, 2, 3]
+          - name: sharpness
+            levels: [1, 2, 3, 4]
 
   helmets:
     items:
+      - material: iron_helmet
+        enchantments:
+          - name: protection
+            levels: [4]
+
       - material: diamond_helmet
         enchantments:
-          protection: [1, 2]
+          - name: protection
+            levels: [1, 2, 3]
 
       - material: netherite_helmet
         enchantments:
-          protection: [1, 2]
+          - name: protection
+            levels: [1, 2]
 
   chestplates:
     items:
+      - material: iron_chestplate
+        enchantments:
+          - name: protection
+            levels: [4]
+
       - material: diamond_chestplate
         enchantments:
-          protection: [1, 2]
+          - name: protection
+            levels: [1, 2, 3]
 
       - material: netherite_chestplate
         enchantments:
-          protection: [1, 2]
+          - name: protection
+            levels: [1, 2]
 
   leggings:
     items:
+      - material: iron_leggings
+        enchantments:
+          - name: protection
+            levels: [4]
+
       - material: diamond_leggings
         enchantments:
-          protection: [1, 2]
+          - name: protection
+            levels: [1, 2, 3]
 
       - material: netherite_leggings
         enchantments:
-          protection: [1, 2]
+          - name: protection
+            levels: [1, 2]
 
   boots:
     items:
+      - material: iron_boots
+        enchantments:
+          - name: protection
+            levels: [4]
+
       - material: diamond_boots
         enchantments:
-          protection: [1, 2]
+          - name: protection
+            levels: [1, 2, 3]
 
       - material: netherite_boots
         enchantments:
-          protection: [1, 2]
+          - name: protection
+            levels: [1, 2]
 
   tools:
     max-items: 2
     items:
       - material: diamond_pickaxe
         enchantments:
-          efficiency: [1, 2]
+          - name: efficiency
+            levels: [1, 2, 3]
 
       - material: diamond_axe
         enchantments:
-          sharpness: [1]
-          efficiency: [1]
+          - name: sharpness
+            levels: [1, 2, 3]
+          - name: efficiency
+            levels: [1, 2]
 
   ranged-Weapons:
     items:
@@ -91,31 +125,39 @@ kit-settings:
           - material: arrow
             amount: 16
         enchantments:
-          power: [1, 2]
+          - name: power
+            levels: [1, 2, 3]
 
       - material: crossbow
         items:
-          - material: arrow
+          - material: firework_rocket
+            firework:
+              flight-duration: 127
+              explosions:
+                - shape: creeper
+                  colors: "#00ff7f"
+                  fade-colors: "#000000"
+                  has-trail: true
+                  has-twinkle: false
             amount: 8
         enchantments:
-          quick_charge: [1, 2, 3]
+          - name: quick_charge
+            levels: [1, 2, 3]
+          - name: multishot
+            levels: [1]
 
   food:
+    max-items: 1
     items:
       - material: cooked_beef
         amount: [4, 8, 16]
+      - material: golden_apple
+        amount: [1, 2]
 
   offhand:
     items:
       - material: shield
       - material: totem_of_undying
-
-  blocks:
-    items:
-      - material: cobblestone
-        amount: 64
-      - material: oak_planks
-        amount: 64
 
   misc:
     min-items: 0
@@ -123,19 +165,12 @@ kit-settings:
       - material: red_candle
         name: "<red>Dynamite"
         pdc: "dynamite"
+        amount: [1, 2, 4]
+      - material: ender_pearl
         amount: [1, 2]
-      - material: splash_potion
-        potion_contents:
-          color: "#00ff7f"
-          effects:
-            - id: strength
-              amplifier: 2
-              # Duration in seconds
-              duration: 30
-              ambient: false
-              show_particles: false
-              show_icon: false
       - material: light_blue_dye
+        pdc: "haste_talisman"
+        name: "<aqua>Haste Talisman"
         offhand-effects:
           - id: haste
             amplifier: 1
