@@ -57,6 +57,7 @@ tasks {
             github("MilkBowl", "Vault", "1.7.3", "Vault.jar")
             modrinth("excellenteconomy", "2.7.0")
             modrinth("nightcore", "2.14.0.1")
+            modrinth("worldguard", "7.0.16")
         }
     }
 }
